@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
 
-class Square extends Component {  //controlled component
-  render() {
-    return (
-      <button className="square" onClick={() => this.props.onClick()}>
-        {this.props.value}
-      </button>
-    );
-  }
-}
+//Square is stateless functional component
+const Square = (props) => (
+  <button className="square" onClick={() => props.onClick()}>
+    {props.value}
+  </button>
+)
 
 class Board extends Component {
   constructor() {
     super();
     this.state = {
         squares: Array(9).fill(null),
+        xIsNext: true,
     };
   }
   renderSquare(i) {
@@ -23,11 +21,23 @@ class Board extends Component {
   }
   handleClick(i) {
     const squares = this.state.squares.slice();
-    squares[i] = 'X';
-    this.setState({squares: squares});
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext,
+    });
   }
   render() {
-    const status = 'Next player: X';
+    const winner = calculateWinner(this.state.squares); 
+    let status;
+    if (winner) {
+      status = 'Winner: ' + winner;
+    } else {
+      status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+    }
     return (
       <div>
         <div className="status">{status}</div>
