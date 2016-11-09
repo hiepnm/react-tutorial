@@ -105,8 +105,8 @@ class App extends React.Component {
     });
   }
   coordinateStr(position) {
-    const x = position % 3;
-    const y = Math.floor(position / 3);
+    const x = position % 3 + 1;
+    const y = Math.floor(position / 3 + 1);
     return "(" + x + ", " + y + ")";
   }
 }
