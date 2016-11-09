@@ -42,7 +42,8 @@ class App extends React.Component {
     this.state = {
       stepNumber: 0,
       history: [{
-        squares: Array(9).fill(null)
+        squares: Array(9).fill(null),
+        currentPosition: -1
       }],
       xIsNext: true
     };
@@ -60,7 +61,7 @@ class App extends React.Component {
     }
 
     const moves = history.map((step, move) => {
-      const desc = move ? 'Move #' + move : 'Game start';
+      const desc = move ? 'Move #' + this.coordinateStr(step.currentPosition) : 'Game start';
       return (
         <li key={move}><a href="#" onClick={() => this.jumpTo(move)}>{desc}</a></li>
       )
@@ -91,7 +92,8 @@ class App extends React.Component {
     this.setState({
       stepNumber: history.length,
       history: history.concat([{
-        squares: squares
+        squares: squares,
+        currentPosition: i
       }]),
       xIsNext: !this.state.xIsNext,
     });
@@ -101,6 +103,11 @@ class App extends React.Component {
       stepNumber: step,
       xIsNext: (step % 2) ? false : true,
     });
+  }
+  coordinateStr(position) {
+    const x = position % 3;
+    const y = Math.floor(position / 3);
+    return "(" + x + ", " + y + ")";
   }
 }
 
