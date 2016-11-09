@@ -54,10 +54,12 @@ class App extends React.Component {
         squares: Array(9).fill(null),
         currentPosition: -1
       }],
-      xIsNext: true
+      xIsNext: true,
+      ascending: true,
     };
   }
   render() {
+    console.log("ascending: " + this.state.ascending);
     const history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
@@ -87,7 +89,7 @@ class App extends React.Component {
           <div>{status}</div>
           <br />
           <Switch onClick={() => this.toggleClick()}/>Sort
-          <ol>{moves}</ol>
+          <ol reversed={!this.state.ascending}>{moves}</ol>
         </div>
       </div>
     );
@@ -121,7 +123,9 @@ class App extends React.Component {
     return "(" + x + ", " + y + ")";
   }
   toggleClick() {
-    console.log("Toggle Button Click");
+    this.setState({
+      ascending: !this.state.ascending,
+    });
   }
 }
 
