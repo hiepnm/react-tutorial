@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
-import './App.css';
+import './App.css'; 
 
+
+const Switch = (props) => (
+  <label className="switch">
+    <input type="checkbox" onClick={() => props.onClick()} />
+    <div className="slider round"></div>
+  </label>
+);
 //Square is stateless functional component
 const Square = (props) => (
   <button className="square" onClick={() => props.onClick()}>
@@ -12,25 +19,27 @@ class Board extends Component {
   renderSquare(i) {
     return <Square value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />;
   }
-
+  
   render() {
+    const MAX_ROW = 3;
+    const MAX_COL = 3;
+    let rows = Array(3).fill(null);
+    for (var row = 0; row < MAX_ROW; row++) {
+      let cols = Array(3).fill(null);
+      for (var col = 0; col < MAX_COL; col++) {
+        cols[col] = (<span key={col}>{this.renderSquare(row * 3 + col)}</span>);
+      }
+      rows[row] = 
+        (
+          <div className="board-row" key={row}>
+            {cols}
+          </div>
+        );
+    }
+    const board = rows.slice();
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {board}
       </div>
     );
   }
@@ -63,7 +72,7 @@ class App extends React.Component {
     const moves = history.map((step, move) => {
       const desc = move ? 'Move #' + this.coordinateStr(step.currentPosition) : 'Game start';
       return (
-        <li key={move}><a href="#" onClick={() => this.jumpTo(move)}>{desc}</a></li>
+        <li key={move}><a href="#" onClick={() => this.jumpTo(move)} style={{fontWeight: move === this.state.stepNumber ? "bold":"normal"}}>{desc}</a></li>
       )
     });
     return (
@@ -76,6 +85,8 @@ class App extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
+          <br />
+          <Switch onClick={() => this.toggleClick()}/>Sort
           <ol>{moves}</ol>
         </div>
       </div>
@@ -108,6 +119,9 @@ class App extends React.Component {
     const x = position % 3 + 1;
     const y = Math.floor(position / 3 + 1);
     return "(" + x + ", " + y + ")";
+  }
+  toggleClick() {
+    console.log("Toggle Button Click");
   }
 }
 
