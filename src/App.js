@@ -183,7 +183,7 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c, d, e] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d] && squares[a] === squares[e] ) {
-      return squares[a];
+      return lines[i].slice();
     }
   }
   return null;
