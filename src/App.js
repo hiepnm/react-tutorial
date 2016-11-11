@@ -1,6 +1,53 @@
 import React, { Component } from 'react';
 import './App.css'; 
 
+/*
+  Tictactoe: calculate winer algorithms
+*/
+
+var lines = [];
+const ROWS = 20
+const COLS = 20
+const WIN = 5
+//x asis O(n) --
+for (let row = 0; row < ROWS; row++) {
+  for (let col = 0; col < COLS - WIN + 1; col++) {
+    let line = Array(WIN).fill(-1);
+    for (let k = 0; k < WIN; k++) 
+      line[k] = row * COLS + col + k;
+    lines.push(line);
+  }
+}
+
+//y axis O(n) |
+for (let col = 0; col < COLS; col++) {
+  for (let row = 0; row < ROWS - WIN + 1; row++) {
+    let line = Array(WIN).fill(-1);
+    for (let k = 0; k < WIN; k++) 
+      line[k] = k * COLS + row * COLS + col;
+    lines.push(line);
+  }
+}
+
+//z  axis \
+for (let row = 0; row < ROWS - WIN + 1; row++) {
+  for (let col = 0; col < COLS - WIN + 1; col++) {
+    let line = Array(WIN).fill(-1);
+    for (let k = 0; k < WIN; k++) 
+      line[k] = k * (COLS + 1) + row * COLS + col;
+    lines.push(line);
+  }
+}
+
+//z' axis /
+for (var row = 0; row < ROWS - WIN + 1; row++) {
+  for (var col = COLS - 1; col >= WIN - 1; col--) {
+    var line = Array(WIN).fill(-1);
+    for (var k = 0; k < WIN; k++) 
+      line[k] = k * (COLS - 1) + row * COLS + col;
+    lines.push(line);
+  }
+}
 
 const Switch = (props) => (
   <label className="switch">
@@ -21,13 +68,11 @@ class Board extends Component {
   }
   
   render() {
-    const MAX_ROW = 3;
-    const MAX_COL = 3;
-    let rows = Array(3).fill(null);
-    for (var row = 0; row < MAX_ROW; row++) {
-      let cols = Array(3).fill(null);
-      for (var col = 0; col < MAX_COL; col++) {
-        cols[col] = (<span key={col}>{this.renderSquare(row * 3 + col)}</span>);
+    let rows = Array(ROWS).fill(null);
+    for (var row = 0; row < ROWS; row++) {
+      let cols = Array(COLS).fill(null);
+      for (var col = 0; col < COLS; col++) {
+        cols[col] = (<span key={col}>{this.renderSquare(row * COLS + col)}</span>);
       }
       rows[row] = 
         (
@@ -51,7 +96,7 @@ class App extends React.Component {
     this.state = {
       stepNumber: 0,
       history: [{
-        squares: Array(9).fill(null),
+        squares: Array(ROWS * COLS).fill(null),
         currentPosition: -1
       }],
       xIsNext: true,
@@ -118,8 +163,8 @@ class App extends React.Component {
     });
   }
   coordinateStr(position) {
-    const x = position % 3 + 1;
-    const y = Math.floor(position / 3 + 1);
+    const x = position % COLS + 1;
+    const y = Math.floor(position / COLS + 1);
     return "(" + x + ", " + y + ")";
   }
   toggleClick() {
@@ -133,20 +178,11 @@ class App extends React.Component {
 
 
 
+
 function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
   for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+    const [a, b, c, d, e] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d] && squares[a] === squares[e] ) {
       return squares[a];
     }
   }
